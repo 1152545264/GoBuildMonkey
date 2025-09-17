@@ -223,3 +223,31 @@ func TestNextToken3(t *testing.T) {
 		}
 	}
 }
+
+func TestNextToken4(t *testing.T) {
+	inputs := ` "foobar"
+				"foo bar"
+				`
+	tests := []struct {
+		expectedType    token.TokenType
+		expectedLiteral string
+	}{
+		{token.STRING, "foobar"},
+		{token.STRING, "foo bar"},
+		{token.EOF, ""},
+	}
+
+	l := New(inputs)
+	for i, tt := range tests {
+		tok := l.NextToken()
+		if tok.Type != tt.expectedType {
+			t.Fatalf("tests[%d] - tokentype wrong. expected %q. got=%q",
+				i, tt.expectedType, tok.Type)
+		}
+
+		if tok.Literal != tt.expectedLiteral {
+			t.Fatalf("tests[%d] - literal wrong. expected %q. got=%q",
+				i, tt.expectedLiteral, tok.Literal)
+		}
+	}
+}
